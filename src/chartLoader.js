@@ -1,7 +1,7 @@
 // chartLoader.js - 挂载并初始化图表。
 import "./style.css";
 import * as echarts from "echarts";
-import { fieldData } from "./data/fielddata.js";
+import { fieldData } from "./Data.js";
 //导入文件为对象
 const importAll = (r) => {
 	let optionslist = {};
