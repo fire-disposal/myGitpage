@@ -1,79 +1,78 @@
 //chart3.js
 export var option = {
-    
+    title: {
+      text: 'Temperature Change in the Coming Week'
+    },
     tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-            type: 'cross',
-            crossStyle: {
-                color: '#999'
-            }
-        }
+      trigger: 'axis'
     },
+    legend: {},
     toolbox: {
-        feature: {
-            dataView: {show: true, readOnly: false},
-            magicType: {show: true, type: ['line', 'bar']},
-            restore: {show: true},
-            saveAsImage: {show: true}
-        }
-    },
-    legend: {
-
-        bottom: 10,
-        data:['蒸发量','降水量','平均温度']
-    },
-    xAxis: [
-        {
-            type: 'category',
-            data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
-            axisPointer: {
-                type: 'shadow'
-            }
-        }
-    ],
-    yAxis: [
-        {
-            type: 'value',
-            name: '水量',
-            min: 0,
-            max: 250,
-            interval: 50,
-            axisLabel: {
-                formatter: '{value} ml'
-            }
+      show: true,
+      feature: {
+        dataZoom: {
+          yAxisIndex: 'none'
         },
-        {
-            type: 'value',
-            name: '温度',
-            min: 0,
-            max: 25,
-            interval: 5,
-            axisLabel: {
-                formatter: '{value} °C'
-            }
-        }
-    ],
+        dataView: { readOnly: false },
+        magicType: { type: ['line', 'bar'] },
+        restore: {},
+        saveAsImage: {}
+      }
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        formatter: '{value} °C'
+      }
+    },
     series: [
-        {
-            name:'蒸发量',
-            type:'bar',
-            data:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
-            color:'red'
+      {
+        name: 'Highest',
+        type: 'line',
+        data: [10, 11, 13, 11, 12, 12, 9],
+        markPoint: {
+          data: [
+            { type: 'max', name: 'Max' },
+            { type: 'min', name: 'Min' }
+          ]
         },
-        {
-            name:'降水量',
-            type:'bar',
-            data:[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
-            color:'yellow'
-        },
-        {
-            name:'平均温度',
-            type:'line',
-            yAxisIndex: 1,
-            data:[2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2],
-            color:'blue'
+        markLine: {
+          data: [{ type: 'average', name: 'Avg' }]
         }
+      },
+      {
+        name: 'Lowest',
+        type: 'line',
+        data: [1, -2, 2, 5, 3, 2, 0],
+        markPoint: {
+          data: [{ name: '周最低', value: -2, xAxis: 1, yAxis: -1.5 }]
+        },
+        markLine: {
+          data: [
+            { type: 'average', name: 'Avg' },
+            [
+              {
+                symbol: 'none',
+                x: '90%',
+                yAxis: 'max'
+              },
+              {
+                symbol: 'circle',
+                label: {
+                  position: 'start',
+                  formatter: 'Max'
+                },
+                type: 'max',
+                name: '最高点'
+              }
+            ]
+          ]
+        }
+      }
     ]
-};
-
+  };
