@@ -35,8 +35,12 @@ module.exports = {
     }),
   ],
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    static: {
+        directory: path.join(__dirname, 'dist'),
+    },
     compress: true,
     port: 9000,
-  },
+    watchFiles: ['src/**/*'], // 监视指定目录下的文件变化
+    hot: true,
+},
 };

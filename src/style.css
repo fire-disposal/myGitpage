@@ -13,7 +13,7 @@ body {
     width: 90%; /* 增加容器宽度 */
     max-width: 1200px;
     margin: 0px auto; /* 增加上外边距 */
-    padding: 20px 30px; /* 增加内边距 */
+    padding: 20px 20px; /* 增加内边距 */
     background-color: #fff;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* 加强阴影效果 */
 }
@@ -82,6 +82,58 @@ main {
 #box2 .chart-placeholder {
     order: 2; /* 调整图表顺序 */
 }
+
+/* ====================== 下拉选框样式 ====================== */
+
+.select-container {
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+select {
+    appearance: none; /* 移除默认样式 */
+    padding: 10px; /* 增加内边距 */
+    border: 1px solid #999;
+    border-radius: 5px;
+    background-color: #f1f1f1;
+    color: #333;
+    font-size: 16px;
+    width: 200px; /* 调整宽度以适应内文本 */
+    text-align: center; /* 两端对齐 */
+}
+
+
+/* ====================== 文本框样式 ====================== */
+.textarea-container {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+textarea {
+    width: 90%; /* 全宽 */
+    height: 200px; /* 固定高度 */
+    padding: 10px; /* 内边距 */
+    border: 1px solid #999; /* 边框样式 */
+    border-radius: 5px; /* 圆角边框 */
+    background-color: #f1f1f1; /* 背景颜色 */
+    color: #333; /* 字体颜色 */
+    font-size: 16px; /* 字体大小 */
+    line-height: 1.6; /* 行高 */
+    resize: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+}
+
+/* 聚焦时的样式 */
+textarea:focus {
+    border-color: #76ACE6FF; /* 聚焦时改变边框颜色 */
+    outline: none; /* 去掉默认的聚焦轮廓 */
+    box-shadow: 0 0 5px rgba(118, 172, 230, 0.5); /* 聚焦时的阴影效果 */
+}
+
 
 /* ====================== 媒体查询 ====================== */
 @media (max-width: 800px) {
