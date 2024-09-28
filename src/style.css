@@ -36,6 +36,11 @@ main {
 }
 
 /* ====================== 文字和图表部分样式 ====================== */
+.subtitle{
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 10px; /* 增加底部外边距 */
+}
 .text-section, .chart-section {
     margin-bottom: 30px; /* 减少底部外边距 */
 }

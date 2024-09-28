@@ -1,4 +1,4 @@
- //chart2.js
+
  export var option = {
   legend: {
     width: 350,

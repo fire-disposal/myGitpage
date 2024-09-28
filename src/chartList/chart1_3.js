@@ -1,4 +1,4 @@
-//chart3.js
+
 export var option = {
     title: {
       text: 'Temperature Change in the Coming Week'
