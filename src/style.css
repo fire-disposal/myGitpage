@@ -93,16 +93,63 @@ main {
 }
 
 select {
-    appearance: none; /* 移除默认样式 */
-    padding: 10px; /* 增加内边距 */
-    border: 1px solid #999;
-    border-radius: 5px;
-    background-color: #f1f1f1;
-    color: #333;
-    font-size: 16px;
-    width: 200px; /* 调整宽度以适应内文本 */
-    text-align: center; /* 两端对齐 */
-}
+
+    /* styling */
+    background-color: white;
+    border: thin solid blue;
+    border-radius: 4px;
+    display: inline-block;
+    font: inherit;
+    line-height: 1.5em;
+    padding: 0.5em 3.5em 0.5em 1em;
+  
+    /* reset */
+  
+    margin: 0;      
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+  
+
+  select.minimal {
+    background-image:
+      linear-gradient(45deg, transparent 50%, gray 50%),
+      linear-gradient(135deg, gray 50%, transparent 50%),
+      linear-gradient(to right, #ccc, #ccc);
+    background-position:
+      calc(100% - 20px) calc(1em + 2px),
+      calc(100% - 15px) calc(1em + 2px),
+      calc(100% - 2.5em) 0.5em;
+    background-size:
+      5px 5px,
+      5px 5px,
+      1px 1.5em;
+    background-repeat: no-repeat;
+  }
+  
+  select.minimal:focus {
+    background-image:
+      linear-gradient(45deg, green 50%, transparent 50%),
+      linear-gradient(135deg, transparent 50%, green 50%),
+      linear-gradient(to right, #ccc, #ccc);
+    background-position:
+      calc(100% - 15px) 1em,
+      calc(100% - 20px) 1em,
+      calc(100% - 2.5em) 0.5em;
+    background-size:
+      5px 5px,
+      5px 5px,
+      1px 1.5em;
+    background-repeat: no-repeat;
+    border-color: green;
+    outline: 0;
+  }
+  
+
+  
 
 
 /* ====================== 文本框样式 ====================== */
@@ -118,7 +165,6 @@ textarea {
     height: 200px; /* 固定高度 */
     padding: 10px; /* 内边距 */
     border: 1px solid #999; /* 边框样式 */
-    border-radius: 5px; /* 圆角边框 */
     background-color: #f1f1f1; /* 背景颜色 */
     color: #333; /* 字体颜色 */
     font-size: 16px; /* 字体大小 */
