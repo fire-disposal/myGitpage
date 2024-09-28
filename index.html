@@ -5,45 +5,49 @@
     <title>数据可视化展示-网页测试</title>
     <!-- 引入刚刚下载的 ECharts 文件 -->
     <script src="echarts.js"></script>
-    <!-- 引入表格定义文件 -->
-    <script src="chartsList.js"></script>
+    <!-- 引入各个表格控制文件 -->
+    <script defer src="chart1.js"></script>
+    <script defer src="chart2.js"></script>
     <!-- 引入样式文件 -->
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container">
       <header>
-          <h1>数据可视化展示</h1>
+        <h1>数据可视化展示</h1>
       </header>
       <main>
-          <section class="text-section">
-              <p>这是数据可视化展示页面的文本部分。在这里，您可以提供一些关于数据的介绍和说明。
-                测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本
-                老师我不知道这里放点啥老师我不知道这里放点啥老师我不知道这里放点啥老师我不知道这里放点啥
-                老师我不知道这里放点啥老师我不知道这里放点啥老师我不知道这里放点啥老师我不知道这里放点啥
-              </p>
-          </section>
-          <section class="chart-section">
-              <div class="chart-placeholder" id="main1"></div>
-          </section>
-          <section class="text-section">
-              <p> &nbsp;&nbsp;这里是另一段文本，用于进一步解释数据的背景和细节。
-                  这里是另一段文本，用于进一步解释数据的背景和细节。
-                  这里是另一段文本，用于进一步解释数据的背景和细节。
-                  这里是另一段文本，用于进一步解释数据的背景和细节。
-                  这里是另一段文本，用于进一步解释数据的背景和细节。
-              </p>
-          </section>
-          <section class="chart-section">
-              <div class="chart-placeholder" id="main2">图表区域2</div>
-          </section>
-          <section class="text-section">
-              <p>最后一段文本总结数据的发现和结论。</p>
-          </section>
+        <section class="text-section">
+          <p>
+            测试使用echarts进行数据可视化展示。
+            正在测试：利用dataset实现动态数据更新。
+            通过select元素进行表格样式切换
+          </p>
+        </section>
+    
+        <!-- 图表展示区 -->
+        <section class="chart-section">
+          <div class="chart-placeholder" id="main1"></div>
+        </section>
+        <section class="text-section">
+          <p>
+            &nbsp;&nbsp;这里是另一段文本，用于进一步解释数据的背景和细节。
+            这里是另一段文本，用于进一步解释数据的背景和细节。
+            这里是另一段文本，用于进一步解释数据的背景和细节。
+            这里是另一段文本，用于进一步解释数据的背景和细节。
+            这里是另一段文本，用于进一步解释数据的背景和细节。
+          </p>
+        </section>
+        <section class="text-section">
+          <p>最后一段文本总结数据的发现和结论。</p>
+        </section>
+        <div></div>
       </main>
       <footer>
-          <p>© 2024 杭州师范大学 护理学院</p>
+        <p>© 2024 杭州师范大学 护理学院</p>
       </footer>
-  </div>
+    </div>
+
+    <script src="app.js"></script>
   </body>
 </html>
