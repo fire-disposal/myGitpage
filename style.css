@@ -1,4 +1,6 @@
 /* styles.css */
+
+/* ====================== 基本样式 ====================== */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -6,18 +8,20 @@ body {
     color: #333;
 }
 
+/* ====================== 容器样式 ====================== */
 .container {
-    width: 80%;
+    width: 90%; /* 增加容器宽度 */
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    margin: 0px auto; /* 增加上外边距 */
+    padding: 20px 30px; /* 增加内边距 */
     background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* 加强阴影效果 */
 }
 
+/* ====================== 页眉和页脚样式 ====================== */
 header, footer {
     text-align: center;
-    padding: 20px 0;
+    padding: 15px 0; /* 减少内边距 */
     background-color: #76ACE6FF;
     color: #fff;
 }
@@ -26,19 +30,24 @@ header h1, footer p {
     margin: 0;
 }
 
-
+/* ====================== 主要内容样式 ====================== */
 main {
     padding: 20px 0;
 }
 
+/* ====================== 文字和图表部分样式 ====================== */
 .text-section, .chart-section {
-    margin-bottom: 40px;
+    margin-bottom: 30px; /* 减少底部外边距 */
 }
 
-
+/* ====================== 图表占位符 和 图表描述样式 ====================== */
+.chart-placeholder, .chart-description {
+    flex: 1; /* 占据可用空间 */
+    margin: 20px 0; /* 调整上下外边距 */
+    min-width: 280px; /* 最小宽度 */
+}
 
 .chart-placeholder {
-    margin-top: 20px;
     width: 100%;
     height: 300px;
     border: 2px dashed #5586BBFF;
@@ -48,4 +57,35 @@ main {
     font-size: 1.2em;
     color: #007BFF;
     background-color: #e7f3ff;
+}
+
+.chart-description p {
+    margin: 0 0 5px; /* 调整底部外边距 */
+    padding: 5px 15px; /* 统一内边距 */
+    font-size: 1em; /* 设定字体大小 */
+    line-height: 1.6; /* 增加行高，提高可读性 */
+    color: #555; /* 设置字体颜色 */
+    text-align: justify; /* 两端对齐 */
+    transition: color 0.3s ease; /* 过渡效果 */
+}
+
+/* ====================== 图表部分样式 ====================== */
+.chart-section {
+    display: flex;
+    flex-wrap: wrap; /* 允许换行 */
+}
+
+#box2 .chart-description {
+    order: 1; /* 调整图表顺序 */
+}
+
+#box2 .chart-placeholder {
+    order: 2; /* 调整图表顺序 */
+}
+
+/* ====================== 媒体查询 ====================== */
+@media (max-width: 800px) {
+    .chart-section {
+        flex-direction: column; /* 设置为竖直方向布局 */
+    }
 }

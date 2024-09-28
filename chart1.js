@@ -1,8 +1,9 @@
 
-var myChart = echarts.init(document.getElementById('main1'));
+var Chart1 = echarts.init(document.getElementById('main1'));
 
 // 指定图表的配置项和数据
-var option = {
+var option1 = {
+    
     tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -21,6 +22,8 @@ var option = {
         }
     },
     legend: {
+
+        bottom: 10,
         data:['蒸发量','降水量','平均温度']
     },
     xAxis: [
@@ -78,4 +81,4 @@ var option = {
 };
 
 // 使用刚指定的配置项和数据显示图表
-myChart.setOption(option);
+Chart1.setOption(option1);
