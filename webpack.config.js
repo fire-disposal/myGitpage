@@ -6,7 +6,7 @@ module.exports = {
   entry: './src/chartLoader.js',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'doc'),
+    path: path.resolve(__dirname, 'dist'),
   },
   mode: 'development',
   module: {
