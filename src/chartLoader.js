@@ -2,44 +2,134 @@
 import "./style.css";
 import * as echarts from "echarts";
 import { fieldData } from "./Data.js";
-//导入文件为对象
-const importAll = (r) => {
-	let optionslist = {};
-	r.keys().forEach((key) => {
-		const optionName = key.replace("./", "").replace(".js", ""); // 获取文件名作为选项名
-		optionslist[optionName] = r(key).option; // 修复了这里的变量名
+
+// 导入所有图表选项的函数
+const importAllChartOptions = (context) => {
+	const optionsList = {};
+	context.keys().forEach((key) => {
+		const optionName = key.replace("./", "").replace(".js", "");
+		optionsList[optionName] = context(key).option;
 	});
-	return optionslist;
+	return optionsList;
 };
 
-const optionsList = importAll(require.context("./chartList", false, /\.js$/)); // 导入所有选项
+// 获取所有图表的选项列表
+const chartOptions = importAllChartOptions(
+	require.context("./chartOptions", false, /\.js$/)
+);
 
-document.addEventListener("DOMContentLoaded", function () {
-	// 初始化并挂载图表
-	var ChartInstance1 = echarts.init(document.getElementById("main1"));
-	ChartInstance1.setOption(optionsList.chart1_1); // 修复了这里的变量名
+// DOM内容加载完成后执行的函数
+document.addEventListener("DOMContentLoaded", () => {
+	//-----------------------------初始化-----------------------------//
 
-	var ChartInstance2 = echarts.init(document.getElementById("main2"));
-	ChartInstance2.setOption(optionsList.chart2_1[2018]); // 修复了这里的变量名
+	const initializeChart = (chartInstance, chartOption, chartId) => {
+		try {
+			chartInstance.setOption(chartOption);
+		} catch (error) {
+			alert(`初始化图表 ${chartId} 失败: ${error.message}`);
+		}
+	};
 
-	//初始化文本区域
-	const matchingText = fieldData["chart1_1"] || ""; // 从fieldData中获取描述文本
-	document.getElementById("textarea1").value = matchingText; // 将匹配的文本写入textarea
+	// 初始化表一
+	const chartInstance1 = echarts.init(document.getElementById("main1"));
+	chartInstance1.setOption(chartOptions.chart1_1);
+	const initialMatchingText = fieldData["1"];
+	document.getElementById("textarea1").value = initialMatchingText;
 
-	// 监听下拉选框变化，更新图表
+	// 初始化表二
+	const chartInstance2 = echarts.init(document.getElementById("main2"));
+	chartInstance2.setOption(chartOptions.chart2_1);
+
+	// 初始化表三
+	const chartInstance3 = echarts.init(document.getElementById("main3"));
+	chartInstance3.setOption(chartOptions.chart3_1);
+
+	//-----------------------------下拉监听-----------------------------//
+
+	// 表一下拉
 	document.getElementById("select1").addEventListener("change", function () {
-		ChartInstance1.clear(); // 清空 chart1
-		ChartInstance1.setOption(optionsList[this.value]); // 修复了这里的访问方式
-
-		// 根据选择项写入匹配的文本到textarea
-		const matchingText = fieldData[this.value] || ""; // 从fieldData中获取描述文本
-		document.getElementById("textarea1").value = matchingText; // 将匹配的文本写入textarea
+		const selectedValue = this.value;
+		const ci = chartInstance1;
+		// 刷新图表 更新文本
+		switch (selectedValue) {
+			case "1":
+				ci.clear();
+				ci.setOption(chartOptions.chart1_1);
+				document.getElementById("textarea1").value = fieldData["1"];
+				break;
+			case "2":
+				ci.clear();
+				ci.setOption(chartOptions.chart1_2);
+				document.getElementById("textarea1").value = fieldData["2"];
+				break;
+			case "3":
+				ci.clear();
+				ci.setOption(chartOptions.chart1_3);
+				document.getElementById("textarea1").value = fieldData["3"];
+				break;
+		}
 	});
 
-
-
-	// 监听下拉选框变化，更新图表
+	//表二下拉
 	document.getElementById("select2").addEventListener("change", function () {
-		ChartInstance2.setOption(optionsList.chart2_1[this.value]); // 更新图表选项
-	  });
+		const selectedValue = this.value;
+		const ci = chartInstance2;
+		//折线图、柱状图切换
+		const currentOption = ci.getOption(); // 获取当前选项对象
+		switch (selectedValue) {
+			case "1":
+				currentOption.series.forEach(function (series) {
+					if (series.type) {
+						series.type = "line";
+					}
+				});
+				ci.setOption(currentOption);
+				break;
+			case "2":
+				currentOption.series.forEach(function (series) {
+					if (series.type) {
+						series.type = "bar";
+					}
+				});
+				ci.setOption(currentOption);
+				break;
+			case "3": // 切换为堆叠图
+				currentOption.series.forEach(function (series) {
+					series.type = "bar";
+					series.stack = "total";
+				});
+				ci.setOption(currentOption);
+				break;
+			case "4": // 切换到面积堆叠
+				currentOption.series.forEach(function (series) {
+					series.type = "line";
+					series.stack = "total";
+					series.areaStyle ={}
+				});
+				ci.setOption(currentOption);
+				break;
+		}
+	});
+
+	//表三下拉
+	document.getElementById("select3").addEventListener("change", function () {
+		const selectedValue = this.value;
+		const ci = chartInstance3; // 将chartInstance3赋给ci
+		//可能是1,2,3,4
+		switch (selectedValue) {
+			case "1":
+				ci.clear();
+				ci.setOption();
+				break;
+			case "2":
+				ci.clear();
+				break;
+			case "3":
+				ci.clear();
+				break;
+			case "4":
+				ci.clear();
+				break;
+		}
+	});
 });
