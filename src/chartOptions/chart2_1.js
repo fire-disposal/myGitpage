@@ -1,4 +1,4 @@
-export var option = {
+export const option = {
   dataset: {
     source: [
       ["年份", "计算机科学", "物理学", "化学", "生物学"],

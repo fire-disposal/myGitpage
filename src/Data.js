@@ -7,49 +7,52 @@ export const fieldData = {
 
 
 export const set1 = {
-    "nodes": [
-        {"name": "A"},
-        {"name": "B"},
-        {"name": "C"},
-        {"name": "D"}
+    data: [
+        { name: 'A' },
+        { name: 'B' },
+        { name: 'C' },
+        { name: 'D' }
     ],
-    "links": [
-        {"source": "A", "target": "B", "value": 10},
-        {"source": "A", "target": "C", "value": 15},
-        {"source": "B", "target": "D", "value": 10},
-        {"source": "C", "target": "D", "value": 5}
+    links: [
+        { source: 'A', target: 'B', value: 10 },
+        { source: 'A', target: 'C', value: 15 },
+        { source: 'B', target: 'D', value: 10 },
+        { source: 'C', target: 'D', value: 5 }
     ]
 }
+
 
 
 
 export const set2 = {
-    "nodes": [
-        {"name": "A"},
-        {"name": "B"},
-        {"name": "C"},
-        {"name": "E"}
+    data: [
+        { name: 'A' },
+        { name: 'B' },
+        { name: 'C' },
+        { name: 'E' }
     ],
-    "links": [
-        {"source": "A", "target": "B", "value": 5},
-        {"source": "B", "target": "C", "value": 10},
-        {"source": "C", "target": "E", "value": 20},
-        {"source": "A", "target": "E", "value": 10}
+    links: [
+        { source: 'A', target: 'B', value: 5 },
+        { source: 'B', target: 'C', value: 10 },
+        { source: 'C', target: 'E', value: 20 },
+        { source: 'A', target: 'E', value: 10 }
     ]
 }
+
 
 
 export const set3 = {
-    "nodes": [
-        {"name": "A"},
-        {"name": "B"},
-        {"name": "D"},
-        {"name": "F"}
+    data: [
+        { name: 'A' },
+        { name: 'B' },
+        { name: 'D' },
+        { name: 'F' }
     ],
-    "links": [
-        {"source": "A", "target": "B", "value": 10},
-        {"source": "B", "target": "D", "value": 15},
-        {"source": "D", "target": "F", "value": 5},
-        {"source": "A", "target": "F", "value": 20}
+    links: [
+        { source: 'A', target: 'B', value: 10 },
+        { source: 'B', target: 'D', value: 15 },
+        { source: 'D', target: 'F', value: 5 },
+        { source: 'A', target: 'F', value: 20 }
     ]
 }
+

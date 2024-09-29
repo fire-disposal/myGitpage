@@ -115,20 +115,23 @@ document.addEventListener("DOMContentLoaded", () => {
 	document.getElementById("select3").addEventListener("change", function () {
 		const selectedValue = this.value;
 		const ci = chartInstance3; // 将chartInstance3赋给ci
+		const currentOption = ci.getOption(); // 获取当前选项对象
 		//可能是1,2,3,4
 		switch (selectedValue) {
 			case "1":
-				ci.clear();
-				ci.setOption(chartOptions.chart3_1);
+				currentOption.series[0].data = set1.data;
+				currentOption.series[0].links = set1.links;
+				ci.setOption(currentOption);
 				break;
 			case "2":
-				
+				currentOption.series[0].data = set2.data;
+				currentOption.series[0].links = set2.links;
+				ci.setOption(currentOption);
 				break;
 			case "3":
-				ci.clear();
-				break;
-			case "4":
-				ci.clear();
+				currentOption.series[0].data = set3.data;
+				currentOption.series[0].links = set3.links;
+				ci.setOption(currentOption);
 				break;
 		}
 	});

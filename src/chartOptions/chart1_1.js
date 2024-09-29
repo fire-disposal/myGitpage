@@ -1,5 +1,5 @@
 //chart1_1.js
-export var option = {
+export const option = {
     
     tooltip: {
         trigger: 'axis',

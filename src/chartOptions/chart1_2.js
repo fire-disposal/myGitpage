@@ -1,5 +1,5 @@
 
- export var option = {
+ export const option = {
   legend: {
     width: 350,
     left: 0,

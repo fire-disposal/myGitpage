@@ -1,5 +1,5 @@
 
-export var option = {
+export const option = {
     title: {
       text: 'Temperature Change in the Coming Week'
     },
