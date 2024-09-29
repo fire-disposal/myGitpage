@@ -1,7 +1,7 @@
 // chartLoader.js - 挂载并初始化图表。
 import "./style.css";
 import * as echarts from "echarts";
-import { fieldData } from "./Data.js";
+import { fieldData,set1,set2,set3 } from "./Data.js";
 
 // 导入所有图表选项的函数
 const importAllChartOptions = (context) => {
@@ -119,10 +119,10 @@ document.addEventListener("DOMContentLoaded", () => {
 		switch (selectedValue) {
 			case "1":
 				ci.clear();
-				ci.setOption();
+				ci.setOption(chartOptions.chart3_1);
 				break;
 			case "2":
-				ci.clear();
+				
 				break;
 			case "3":
 				ci.clear();
