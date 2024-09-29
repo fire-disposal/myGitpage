@@ -1,7 +1,7 @@
 // chartLoader.js - 挂载并初始化图表。
 import "./style.css";
 import * as echarts from "echarts";
-import { fieldData,set1,set2,set3 } from "./Data.js";
+import { fieldData, set1, set2, set3 } from "./Data.js";
 
 // 导入所有图表选项的函数
 const importAllChartOptions = (context) => {
@@ -79,17 +79,17 @@ document.addEventListener("DOMContentLoaded", () => {
 		switch (selectedValue) {
 			case "1":
 				currentOption.series.forEach(function (series) {
-					if (series.type) {
-						series.type = "line";
-					}
+					series.type = "line";
+					series.stack = undefined;
+					series.areaStyle = undefined;
 				});
 				ci.setOption(currentOption);
 				break;
 			case "2":
 				currentOption.series.forEach(function (series) {
-					if (series.type) {
-						series.type = "bar";
-					}
+					series.type = "bar";
+					series.stack = undefined;
+					series.areaStyle = undefined;
 				});
 				ci.setOption(currentOption);
 				break;
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				currentOption.series.forEach(function (series) {
 					series.type = "line";
 					series.stack = "total";
-					series.areaStyle ={}
+					series.areaStyle = {};
 				});
 				ci.setOption(currentOption);
 				break;
