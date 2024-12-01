@@ -1,1319 +1,259 @@
 <!DOCTYPE html>
-<html lang="zh">
-	<head>
-		<meta charset="utf-8" />
-		<title>数据可视化展示-网页测试</title>
-		<!-- 引入echarts用于绘制图表 -->
-		<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
-		<!-- 引入echarts-wordcloud用于绘制词云 -->
-		<script src=" https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js "></script>
-		<style>
-			/*  基本样式  */
-			body {
-				margin: 0;
-				font-family: Arial, sans-serif;
-				background-color: #f4f4f9;
-				color: #333;
-			}
-
-			/*  容器样式  */
-			.container {
-				width: 900px;
-				max-width: 1200px;
-				margin: 0px auto;
-				padding: 20px 20px;
-				background-color: #fff;
-				box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-			}
-
-			/*  页眉和页脚样式  */
-			header,
-			footer {
-				text-align: center;
-				padding: 15px 0;
-				background-color: #76ace6ff;
-				color: #fff;
-			}
-
-			header h1,
-			footer p {
-				margin: 0;
-			}
-
-			/*  主要内容样式  */
-			main {
-				padding: 20px 0;
-			}
-
-			/*  文字和图表部分样式  */
-			.subtitle {
-				justify-content: center;
-				text-align: center;
-				margin-bottom: 10px;
-			}
-
-			.text-section,
-			.chart-section {
-				margin-bottom: 30px;
-			}
-
-			p {
-				margin: 20px;
-			}
-
-			/*  图表占位符   */
-			.chart-placeholder,
-			.chart-description {
-				flex: 1;
-				margin: 20px 0;
-				margin-left: 30px;
-				margin-right: 30px;
-				min-width: 280px;
-			}
-
-			.chart-placeholder {
-				width: 100%;
-				height: 300px;
-				display: flex;
-				align-items: center;
-				justify-content: end;
-				font-size: 1.2em;
-			}
-
-			.big-chart-placeholder {
-				width: 80%;
-				height: 350px;
-				display: flex;
-				align-items: center;
-				justify-content: end;
-				font-size: 1.2em;
-			}
-
-			.chart-description p {
-				margin: 0 0 5px;
-				padding: 5px 15px;
-				font-size: 1em;
-				line-height: 1.6;
-				color: #555;
-				text-align: justify;
-				transition: color 0.3s ease;
-			}
-
-			/*  图表部分样式  */
-			.chart-section {
-				display: flex;
-				flex-wrap: wrap;
-				align-items: center;
-				justify-content: center;
-			}
-
-			/* 调整图表顺序 */
-			#box2 .chart-description {
-				order: 1;
-			}
-			#box2 .chart-placeholder {
-				order: 2;
-			}
-
-			/*  下拉选框样式  */
-			.select-container {
-				margin: 10px;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}
-
-			select {
-				/* styling */
-				background-color: white;
-				border: thin solid blue;
-				border-radius: 4px;
-				display: inline-block;
-				font: inherit;
-				line-height: 1.5em;
-				padding: 0.5em 3.5em 0.5em 1em;
-
-				/* reset */
-
-				margin: 0;
-				-webkit-box-sizing: border-box;
-				-moz-box-sizing: border-box;
-				box-sizing: border-box;
-				-webkit-appearance: none;
-				-moz-appearance: none;
-				appearance: none;
-			}
-
-			select.min {
-				background-image: linear-gradient(45deg, transparent 50%, gray 50%),
-					linear-gradient(135deg, gray 50%, transparent 50%),
-					linear-gradient(to right, #ccc, #ccc);
-				background-position: calc(100% - 20px) calc(1em + 2px),
-					calc(100% - 15px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
-				background-size: 5px 5px, 5px 5px, 1px 1.5em;
-				background-repeat: no-repeat;
-			}
-
-			select.min:focus {
-				background-image: linear-gradient(45deg, green 50%, transparent 50%),
-					linear-gradient(135deg, transparent 50%, green 50%),
-					linear-gradient(to right, #ccc, #ccc);
-				background-position: calc(100% - 15px) 1em, calc(100% - 20px) 1em,
-					calc(100% - 2.5em) 0.5em;
-				background-size: 5px 5px, 5px 5px, 1px 1.5em;
-				background-repeat: no-repeat;
-				border-color: green;
-				outline: 0;
-			}
-
-			/*  文本框样式  */
-			.textarea-container {
-				margin: 10px 0;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}
-
-			textarea {
-				width: 90%;
-				height: 200px;
-				padding: 10px;
-				border: 1px solid #999;
-				background-color: #f1f1f1;
-				color: #333;
-				font-size: 16px;
-				line-height: 1.6;
-				resize: none;
-				box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-			}
-
-			/* 聚焦时的样式 */
-			textarea:focus {
-				border-color: #76ace6ff;
-				outline: none;
-				box-shadow: 0 0 5px rgba(118, 172, 230, 0.5);
-			}
-
-			/*  媒体查询，移动端适配  */
-			@media (max-width: 800px) {
-				.chart-section {
-					flex-direction: column; /* 设置为竖直方向布局 */
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<div class="container">
-			<header>
-				<h1>医疗数据可视化展示系统</h1>
-			</header>
-			<main>
-				<section class="text-section">
-					<p>
-						本页面提供多种医疗数据的动态展示，包括疾病类型和护理方案的统计数据。随着医学研究的不断深入和技术的发展，医学数据的获取和分析变得越来越重要。通过这些动态展示，用户可以轻松地了解当前各种疾病的流行趋势和分布情况，以及各类护理方案的实施效果。我们为您提供了多种图表和数据分析工具，以便更好地理解这些复杂的信息。您可以选择不同类别，查看相应的数据分析和趋势图表，探索医学数据背后的故事。
-					</p>
-				</section>
-
-				<div class="subtitle">
-					<h2>图表切换展示模块</h2>
-				</div>
-				<!-- 图表展示区 -->
-				<section class="chart-section" id="box1">
-					<div class="chart-placeholder" id="main1"></div>
-					<div class="chart-description">
-						<div class="select-container">
-							<b>选择疾病类型：</b>
-							<select id="select1" class="min">
-								<option value="1">心血管疾病</option>
-								<option value="2">糖尿病</option>
-								<option value="3">呼吸系统疾病</option>
-								<option value="4">神经系统疾病</option>
-							</select>
-						</div>
-						<div class="textarea-container">
-							<textarea id="textarea1" readonly></textarea>
-						</div>
-					</div>
-				</section>
-				<section class="text-section">
-					<p>
-						图表切换展示模块的设计初衷是帮助医疗专业人士通过不同图表类型的切换，
-						直观地对比和分析疾病相关数据。例如，不同疾病的年龄发病分布对比功
-						能，可以让用户通过切换图表，快速了解特定疾病在不同年龄段的发病趋势。
-						这对于流行病学研究和公共卫生政策制定具有重要意义。通过图表切换，
-						用户不仅可以看到数据的变化，还可以同步阅读相关的描述文本，
-						这些文本会随着图表的变化而自动更新，以提供详细的背景信息和解释说明。
-						这种多样化的展示方式，有助于数据的深度理解和有效传播。
-					</p>
-				</section>
-
-				<div class="subtitle">
-					<h2>多图表自动轮播模块</h2>
-				</div>
-
-				<section class="chart-section" id="box2">
-					<div class="chart-placeholder" id="main2"></div>
-					<div class="chart-description">
-						<div class="select-container">
-							<b>选择护理方案：</b>
-							<select id="select2" class="min">
-								<option value="5">标准护理</option>
-								<option value="6">个性化护理</option>
-								<option value="7">预防性护理</option>
-							</select>
-						</div>
-						<div class="textarea-container">
-							<textarea id="textarea2" readonly></textarea>
-						</div>
-					</div>
-				</section>
-				<section class="text-section">
-					<p>
-						多图表自动轮播模块旨在提供一种无需手动操作的便捷展示方式，
-						非常适合于会议展示或自动化报告生成场景。在不同护理方案之间效果对比评价功能中，
-						用户可以通过预设的时间间隔自动切换图表和描述文本，直观地看到不同护理方案的效果对比。
-						这种自动化展示不仅节省了人力成本，
-						还可以确保在有限的时间内展示更多的研究成果和数据对比。
-						通过轮播展示，观众能够获得连续性的信息流，从而更全面地理解各个护理方案的优缺点。
-					</p>
-				</section>
-
-				<div class="subtitle">
-					<h2>图表类型切换模块</h2>
-				</div>
-
-				<section class="chart-section" id="box3">
-					<div class="select-container">
-						<b>选择健康数据组：</b>
-						<select id="select3" class="min">
-							<option value="8">堆叠图</option>
-							<option value="9">柱状图</option>
-						</select>
-					</div>
-					<div class="big-chart-placeholder" id="main3"></div>
-				</section>
-				<section class="text-section">
-					<p>
-						图表类型切换模块允许用户在健康趋势时间表的堆叠图与柱状图之间进行切换。
-						不同的图表类型适用于不同的数据分析需求，堆叠图可以展示多变量随时间的变化趋势，
-						而柱状图则更适合对单一变量进行详细分析。通过下拉选框，
-						用户可以根据自己的需求选择最合适的图表类型，以便对健康趋势进行更加细致的观察和分析。
-						这一功能特别适用于需要进行长期健康数据跟踪和趋势分析的场景，比如慢性病管理和健康计划评估。
-					</p>
-				</section>
-
-				<div class="subtitle">
-					<h2>词云动态展示模块</h2>
-				</div>
-
-				<section class="chart-section" id="box4">
-					<div class="chart-placeholder" id="main4"></div>
-					<div class="chart-description">
-						<div class="select-container">
-							<b>选择领域：</b>
-							<select id="select4" class="min">
-								<option value="10">互联网+护理</option>
-								<option value="11">物联网+护理</option>
-								<option value="12">护理信息科学</option>
-							</select>
-						</div>
-						<div class="textarea-container">
-							<textarea id="textarea4" readonly></textarea>
-						</div>
-					</div>
-				</section>
-				<section class="text-section">
-					<p>
-						词云动态展示模块通过可视化技术，展示了不同研究领域内的词语热度。
-						这一功能可以帮助研究人员快速了解某一领域的热门研究主题和趋势。
-						用户可以通过下拉选框选择不同的领域，系统将动态生成相应的词云图。
-						词云的动态展示不仅使得信息更具视觉冲击力，也便于用户发现领域内的核心主题和研究热点。
-						这种展示方式特别适合学术研讨会和研究报告，能够帮助观众快速抓住关键点并激发讨论。
-					</p>
-				</section>
-
-				<div class="subtitle">
-					<h2>桑基图数据展示模块</h2>
-				</div>
-
-				<section class="chart-section" id="box5">
-					<div class="select-container">
-						<b>选择数据组：</b>
-						<select id="select5" class="min">
-							<option value="13">财政支持</option>
-							<option value="14">治疗路径分析</option>
-						</select>
-					</div>
-					<div class="big-chart-placeholder" id="main5"></div>
-				</section>
-				<div class="textarea-container">
-					<textarea id="text5" readonly></textarea>
-				</div>
-
-				<section class="text-section">
-					<p>
-						桑基图数据展示模块提供了一种流动型数据的可视化方式，适用于复杂的路径分析。
-						财政分析图和治疗路径分析图是两个主要应用场景。
-						用户可以通过下拉选框选择查看不同类型的桑基图。
-						例如，治疗路径分析图可以帮助医生和管理者了解患者在治疗过程中不同阶段的转归和资源分配情况。
-						这种可视化方式有助于优化治疗流程和资源配置，最终提高医疗服务的效率和效果。
-					</p>
-				</section>
-
-				<div class="subtitle">
-					<h2>动态数据绘图模块</h2>
-				</div>
-
-				<section class="chart-section" id="box6">
-					<div class="big-chart-placeholder" id="main6"></div>
-				</section>
-				<section class="text-section">
-					<p>
-						动态数据绘图模块旨在展示数据随时间的动态变化能力。
-						通过实时更新图表，用户可以观察到数据变化的即时性和趋势性。
-						这一功能对于实时监测和动态数据分析非常重要，尤其是在需要快速响应的医疗场景中。
-						无论是急诊监护中的生理参数监测，还是流行病爆发时的实时数据分析，
-						动态数据绘图模块都能够提供强大的支持。通过这种动态展示，用户可以更及时地做出科学决策和响应措施。
-					</p>
-				</section>
-			</main>
-			<footer>
-				<p>© 2024 本页面一切数据仅供展示图表效果，不具有任何现实意义</p>
-			</footer>
-		</div>
-		<script>
-			// 检查ECharts库是否加载成功
-			if (typeof echarts === "undefined") {
-				alert("ECharts库加载失败");
-			} else {
-				// DOM内容加载完成后执行的函数
-				document.addEventListener("DOMContentLoaded", () => {
-					// 函数：初始化图表
-					const initializeChart = (chartInstance, chartOption, chartId) => {
-						try {
-							chartInstance.setOption(chartOption);
-						} catch (error) {
-							console.error(`初始化图表 ${chartId} 失败: ${error.message}`);
-						}
-					};
-
-					// 定义ECharts实例
-					const chartInstance1 = echarts.init(document.getElementById("main1"));
-					const chartInstance2 = echarts.init(document.getElementById("main2"));
-					const chartInstance3 = echarts.init(document.getElementById("main3"));
-					const chartInstance4 = echarts.init(document.getElementById("main4"));
-					const chartInstance5 = echarts.init(document.getElementById("main5"));
-					const chartInstance6 = echarts.init(document.getElementById("main6"));
-
-					//初始化动态图表
-					function randomHeartRateData() {
-						now = new Date(+now + oneMinute);
-						// 模拟心率波动在60到100之间
-						value = Math.max(60, Math.min(100, value + Math.random() * 4 - 2));
-						return {
-							name: now.toString(),
-							value: [
-								[now.getFullYear(), now.getMonth() + 1, now.getDate()].join(
-									"/"
-								) +
-									" " +
-									[now.getHours(), now.getMinutes()]
-										.map((n) => (n < 10 ? "0" : "") + n)
-										.join(":"),
-								Math.round(value),
-							],
-						};
-					}
-
-					let data = [];
-					let now = new Date(2023, 0, 1, 0, 0); // 数据从2023年1月1日00:00开始
-					let oneMinute = 60 * 1000;
-					let value = 75; // 初始心率设定为75 BPM
-					for (var i = 0; i < 1000; i++) {
-						data.push(randomHeartRateData());
-					}
-
-					dynamicoption = {
-						title: {
-							text: "每分钟心率监测",
-						},
-						tooltip: {
-							trigger: "axis",
-							formatter: function (params) {
-								params = params[0];
-								var date = new Date(params.name);
-								return (
-									date.getDate() +
-									"/" +
-									(date.getMonth() + 1) +
-									"/" +
-									date.getFullYear() +
-									" " +
-									date.getHours() +
-									":" +
-									(date.getMinutes() < 10 ? "0" : "") +
-									date.getMinutes() +
-									" : " +
-									params.value[1] +
-									" BPM"
-								);
-							},
-							axisPointer: {
-								animation: false,
-							},
-						},
-						xAxis: {
-							type: "time",
-							splitLine: {
-								show: false,
-							},
-							axisLabel: {
-								formatter: function (value) {
-									var date = new Date(value);
-									return [date.getHours(), date.getMinutes()]
-										.map((n) => (n < 10 ? "0" : "") + n)
-										.join(":");
-								},
-							},
-						},
-						yAxis: {
-							type: "value",
-							min: 50,
-							max: 120,
-							boundaryGap: [0, "100%"],
-							splitLine: {
-								show: true,
-							},
-							axisLabel: {
-								formatter: "{value} BPM",
-							},
-						},
-						series: [
-							{
-								name: "心率",
-								type: "line",
-								showSymbol: false,
-								data: data,
-								markLine: {
-									data: [
-										{ yAxis: 100, label: { formatter: "高心率警戒线" } },
-										{ yAxis: 60, label: { formatter: "低心率警戒线" } },
-									],
-								},
-							},
-						],
-					};
-
-					setInterval(function () {
-						for (var i = 0; i < 5; i++) {
-							data.shift();
-							data.push(randomHeartRateData());
-						}
-						chartInstance6.setOption({
-							series: [
-								{
-									data: data,
-								},
-							],
-						});
-					}, 1000);
-
-					// 初始化图表
-					initializeChart(chartInstance1, optionsList.cardio_pie, "main1");
-					initializeChart(chartInstance2, optionsList.basic_bar, "main2");
-					initializeChart(chartInstance3, optionsList.show_line, "main3");
-					initializeChart(chartInstance4, optionsList.webnursing_word, "main4");
-					initializeChart(chartInstance5, optionsList.sanky_finance, "main5");
-					initializeChart(chartInstance6, dynamicoption, "main6");
-
-
-
-					// 初始化描述
-					document.getElementById("textarea1").value = description[1];
-					document.getElementById("textarea2").value = description[5];
-					document.getElementById("textarea4").value = description[10];
-					document.getElementById("text5").value = description[13];
-
-					// 批量配置下拉框事件
-					const setupSelectChange = (
-						selectId,
-						chartInstance,
-						optionMap,
-						textAreaId
-					) => {
-						document
-							.getElementById(selectId)
-							.addEventListener("change", function () {
-								const selectedValue = this.value;
-								try {
-									chartInstance.clear();
-									chartInstance.setOption(optionMap[selectedValue]);
-									if (textAreaId) {
-										document.getElementById(textAreaId).value =
-											description[selectedValue];
-									}
-								} catch (error) {
-									console.error(
-										`下拉框 ${selectId} 更新失败: ${error.message}`
-									);
-								}
-							});
-					};
-
-					// 配置下拉框监听
-					setupSelectChange(
-						"select1",
-						chartInstance1,
-						{
-							1: optionsList.cardio_pie,
-							2: optionsList.diabate_pie,
-							3: optionsList.Respira_pie,
-							4: optionsList.Nervous_pie,
-						},
-						"textarea1"
-					);
-
-					setupSelectChange(
-						"select2",
-						chartInstance2,
-						{
-							5: optionsList.basic_bar,
-							6: optionsList.personal_bar,
-							7: optionsList.preventive_bar,
-						},
-						"textarea2"
-					);
-
-					// 自动轮换逻辑
-					let currentSelect2Index = 5; // 从基本图表开始
-					const select2Values = [5, 6, 7]; // 下拉框选项对应的值
-					const select2Element = document.getElementById("select2");
-
-					setInterval(() => {
-						// 切换到下一个配置
-						currentSelect2Index =
-							select2Values[
-								(select2Values.indexOf(currentSelect2Index) + 1) %
-									select2Values.length
-							];
-
-						// 更新下拉框的值
-						select2Element.value = currentSelect2Index;
-
-						// 手动触发更改事件
-						select2Element.dispatchEvent(new Event("change"));
-					}, 5000); // 每10秒切换一次
-
-					setupSelectChange("select3", chartInstance3, {
-						8: optionsList.show_line,
-						9: optionsList.show_bar,
-					});
-
-					setupSelectChange(
-						"select4",
-						chartInstance4,
-						{
-							10: optionsList.webnursing_word,
-							11: optionsList.iotnursing_word,
-							12: optionsList.infonursing_word,
-						},
-						"textarea4"
-					);
-
-					setupSelectChange(
-						"select5",
-						chartInstance5,
-						{
-							13: optionsList.sanky_finance,
-							14: optionsList.sanky_treatment,
-						},
-						"text5"
-					);
-				});
-			}
-
-			//存放文本描述数据
-			const description = {
-				1: "心血管疾病是指影响心脏和血管的疾病，包括冠心病、高血压和心力衰竭等。在老年人群中尤为常见，护理干预需通过低盐低脂饮食、适度运动及定期监测血压和胆固醇水平，帮助减少心脏病发作和中风的风险，同时通过健康的生活方式和医学干预进行管理。",
-
-				2: "糖尿病是一种以高血糖为特征的慢性代谢疾病，需通过饮食控制、运动和药物治疗来维持血糖水平的平衡。老年糖尿病患者需特别关注血糖监测和足部护理。护理干预通过个性化饮食计划和定期体检，帮助预防并发症如视力损伤和神经病变。",
-
-				3: "呼吸系统疾病包括哮喘、慢性阻塞性肺病等，通常表现为呼吸困难。对于老年患者，护理干预包括提供呼吸康复训练和监测肺功能，帮助改善生活质量和降低感染风险。",
-
-				4: "神经系统疾病涉及大脑、脊髓及周围神经，常见有阿尔茨海默病、帕金森病等。护理干预通过认知训练和日常生活支持，帮助老年患者延缓认知衰退，需综合治疗和康复训练以减轻家庭负担。",
-
-				5: "标准护理是指按照医学指南和标准程序进行的常规护理，以确保患者获得一致且有效的治疗和照顾。在老年护理中，提供基础支持如定期健康检查和药物管理，以确保老年人获得有效的治疗和全面的健康评估。",
-
-				6: "个性化护理根据患者的独特需求和偏好定制护理计划，以提高治疗效果和患者满意度。在老年健康中尤为重要，需根据每位老年人的健康状况和生活习惯制定护理计划，提升他们的生活质量和自主性，强调个体差异。",
-
-				7: "预防性护理着重于疾病的预防，通过健康教育、免疫接种和定期体检等措施降低疾病风险和促进健康。对于老年人，护理干预帮助他们保持健康，延缓疾病进展，通过疫苗接种、骨密度检测等措施预防常见疾病。",
-
-				8: "",
-
-				9: "",
-
-				10: "互联网+护理是一种将互联网技术与护理服务相结合的新型医疗服务模式。通过互联网技术，护理服务可以在更广泛的范围内进行覆盖和推广，提供更加便捷和高效的服务。这种模式利用在线平台、移动应用和远程监控等技术手段，使得护理服务不仅限于医院和诊所，还可以延伸到患者的家庭和社区。互联网+护理可以实现多种功能，包括在线预约、远程健康监测、护理咨询、慢病管理等。患者可以通过互联网平台与护理人员进行互动，获得个性化的健康指导和护理服务。同时，这种模式也能够提升护理资源的利用效率，减轻医院的压力，并为患者提供更好的就医体验。",
-
-				11: "物联网（IoT）在护理领域的应用正在革新医疗保健方式。通过连接各种智能设备和传感器，物联网技术能够实时监测患者的健康状况并收集重要的健康数据。这些数据可以包括生命体征、活动水平、睡眠质量等，从而为医疗专业人员提供全面的患者信息。在护理领域，物联网应用包括远程监控系统、智能床垫、可穿戴设备和药物管理系统等。这些技术使得护理人员可以随时了解患者的健康变化，及时进行干预和调整护理计划。此外，物联网还能提高护理服务的效率，如自动提醒患者服药、检测跌倒事件、管理慢性疾病等。通过物联网技术，护理服务变得更加个性化和精准化，患者的安全性和舒适度也得到显著提升。这种创新不仅减轻了护理人员的负担，还改善了患者的治疗效果和生活质量，推动了护理行业向智能化和数据驱动的方向发展。",
-
-				12: "护理信息学是结合护理学、信息科学和计算机技术的一门跨学科领域，旨在管理和处理护理实践中的数据、信息和知识。其主要目标是通过信息技术的应用，提高护理服务的质量、效率和安全性。在护理信息学中，信息系统和工具被用来支持护理工作流程，包括电子健康记录（EHR）、临床决策支持系统、患者监护系统和护理管理软件等。这些系统帮助护理人员更好地记录和访问患者信息，进行数据分析和临床决策，从而改善患者的护理结果。此外，护理信息学还涉及数据标准化、隐私和安全管理、教育与培训等方面，确保信息系统的有效实施和使用。这一领域的不断发展推动了护理实践的数字化转型，提高了医疗团队的协作能力，并为患者提供了更为优质的护理服务。",
-
-				13: "桑基图是一种有效的数据可视化工具，常用于展示财政资金的流动和分配情况。它通过一系列相互连接的节点和流动的线条，直观地展示资金从一个部门或项目流向另一个的过程。每条线的宽度代表了流动资金的数量，使得观者可以快速理解和分析资金的分配比例和流动趋势。这种可视化方式有助于揭示资源的分配优先级、识别潜在的效率低下之处，并支持决策者进行更为明智的预算调整和资源配置。通过桑基图，复杂的财政数据变得易于理解和分析，为财政透明度和问责制提供了强有力的支持。",
-
-				14: "桑基图在治疗路径分析中具有重要作用，主要体现在可视化流程、识别关键节点、资源分配分析、发现瓶颈和改进机会以及比较和对标等方面。通过清晰展示患者在治疗路径中的各个阶段，桑基图可以直观表现出不同治疗步骤之间的患者流动量和比例，帮助识别资源集中使用的关键节点。同时，它能揭示资源分配情况，识别资源浪费或不足之处，优化配置。此外，桑基图能够发现流程中的瓶颈，如等待时间过长或步骤重复等，帮助医院找到改进机会，提高效率。不同患者群体或治疗方案的路径也可以通过桑基图进行比较，以发现最佳实践或需要改进的领域。",
-			};
-
-			//存放词云数据
-			const worddata = {
-				we_nursing: [
-					{ name: "远程监护", value: 2500 },
-					{ name: "电子健康记录", value: 2200 },
-					{ name: "护理管理系统", value: 1800 },
-					{ name: "健康监测", value: 2400 },
-					{ name: "患者数据分析", value: 2000 },
-					{ name: "个性化护理", value: 2100 },
-					{ name: "护理评估工具", value: 1600 },
-					{ name: "医疗物联网", value: 2300 },
-					{ name: "智能穿戴设备", value: 1900 },
-					{ name: "自动化护理", value: 1700 },
-					{ name: "临床决策支持", value: 2000 },
-					{ name: "护理教育平台", value: 1500 },
-					{ name: "护理质量改进", value: 1800 },
-				],
-				iot_nursing: [
-					{ name: "智能传感器", value: 2600 },
-					{ name: "无线监测", value: 2200 },
-					{ name: "设备互联", value: 1900 },
-					{ name: "数据集成", value: 2100 },
-					{ name: "护理流程优化", value: 2300 },
-					{ name: "实时数据监控", value: 2000 },
-					{ name: "健康数据安全", value: 1700 },
-					{ name: "智能病房", value: 2400 },
-					{ name: "移动护理站", value: 1800 },
-					{ name: "物联网平台", value: 2100 },
-					{ name: "患者隐私保护", value: 1600 },
-					{ name: "预测分析", value: 1900 },
-					{ name: "远程健康管理", value: 2000 },
-				],
-				info_nursing: [
-					{ name: "护理信息系统", value: 2500 },
-					{ name: "信息技术支持", value: 2300 },
-					{ name: "数据共享", value: 2000 },
-					{ name: "临床信息学", value: 2100 },
-					{ name: "医疗数据分析", value: 2200 },
-					{ name: "护理信息安全", value: 1800 },
-					{ name: "健康信息交换", value: 1700 },
-					{ name: "数据标准化", value: 1900 },
-					{ name: "护理记录", value: 2000 },
-					{ name: "电子病历", value: 2400 },
-					{ name: "信息化培训", value: 1500 },
-					{ name: "数据驱动决策", value: 2100 },
-					{ name: "临床数据仓库", value: 1600 },
-				],
-			};
-
-			//保存所有图表配置项具体参数
-			const optionsList = {
-				cardio_pie: {
-					title: {
-						text: "心血管疾病在各年龄段中发病分布",
-						left: "right",
-					},
-					tooltip: {
-						trigger: "item",
-					},
-					legend: {
-						orient: "vertical",
-						left: "left",
-						data: ["0-18岁", "19-35岁", "36-50岁", "51-65岁", "66岁以上"],
-					},
-					series: [
-						{
-							name: "年龄段",
-							type: "pie",
-							radius: "50%",
-							data: [
-								{ value: 335, name: "0-18岁" },
-								{ value: 310, name: "19-35岁" },
-								{ value: 234, name: "36-50岁" },
-								{ value: 135, name: "51-65岁" },
-								{ value: 2200, name: "66岁以上" },
-							],
-							emphasis: {
-								itemStyle: {
-									shadowBlur: 10,
-									shadowOffsetX: 0,
-									shadowColor: "rgba(0, 0, 0, 0.5)",
-								},
-							},
-						},
-					],
-				},
-				diabate_pie: {
-					title: {
-						text: "糖尿病在各年龄段中的发病分布",
-						left: "right",
-					},
-					tooltip: {
-						trigger: "item",
-					},
-					legend: {
-						orient: "vertical",
-						left: "left",
-						data: ["0-18岁", "19-35岁", "36-50岁", "51-65岁", "66岁以上"],
-					},
-					series: [
-						{
-							name: "年龄段",
-							type: "pie",
-							radius: "50%",
-							data: [
-								{ value: 335, name: "0-18岁" },
-								{ value: 310, name: "19-35岁" },
-								{ value: 234, name: "36-50岁" },
-								{ value: 135, name: "51-65岁" },
-								{ value: 1548, name: "66岁以上" },
-							],
-							emphasis: {
-								itemStyle: {
-									shadowBlur: 10,
-									shadowOffsetX: 0,
-									shadowColor: "rgba(0, 0, 0, 0.5)",
-								},
-							},
-						},
-					],
-				},
-				Respira_pie: {
-					title: {
-						text: "呼吸系统疾病在各年龄段中的分布",
-						left: "right",
-					},
-					tooltip: {
-						trigger: "item",
-					},
-					legend: {
-						orient: "vertical",
-						left: "left",
-						data: ["0-18岁", "19-35岁", "36-50岁", "51-65岁", "66岁以上"],
-					},
-					series: [
-						{
-							name: "年龄段",
-							type: "pie",
-							radius: "50%",
-							data: [
-								{ value: 150, name: "0-18岁" },
-								{ value: 250, name: "19-35岁" },
-								{ value: 320, name: "36-50岁" },
-								{ value: 400, name: "51-65岁" },
-								{ value: 500, name: "66岁以上" },
-							],
-							emphasis: {
-								itemStyle: {
-									shadowBlur: 10,
-									shadowOffsetX: 0,
-									shadowColor: "rgba(0, 0, 0, 0.5)",
-								},
-							},
-						},
-					],
-				},
-				Nervous_pie: {
-					title: {
-						text: "神经系统疾病在各年龄段中的分布",
-						left: "right",
-					},
-					tooltip: {
-						trigger: "item",
-					},
-					legend: {
-						orient: "vertical",
-						left: "left",
-						data: ["0-18岁", "19-35岁", "36-50岁", "51-65岁", "66岁以上"],
-					},
-					series: [
-						{
-							name: "年龄段",
-							type: "pie",
-							radius: "50%",
-							data: [
-								{ value: 100, name: "0-18岁" },
-								{ value: 200, name: "19-35岁" },
-								{ value: 300, name: "36-50岁" },
-								{ value: 350, name: "51-65岁" },
-								{ value: 450, name: "66岁以上" },
-							],
-							emphasis: {
-								itemStyle: {
-									shadowBlur: 10,
-									shadowOffsetX: 0,
-									shadowColor: "rgba(0, 0, 0, 0.5)",
-								},
-							},
-						},
-					],
-				},
-				basic_bar: {
-					title: {
-						text: "标准护理",
-					},
-					tooltip: {},
-					grid: {
-						left: "5%", // 缩小左边距
-						right: "5%", // 缩小右边距
-						bottom: "10%", // 缩小底部边距
-						containLabel: true,
-					},
-					xAxis: {
-						data: [
-							"病情改善率",
-							"康复时间",
-							"患者反馈",
-							"生活质量改善",
-							"护理成本",
-							"成本效益比",
-							"复发率",
-							"患者依从性",
-							"长期健康评分",
-							"灵活性评分",
-						],
-						axisLabel: {
-							rotate: 45, // 标签旋转角度
-							interval: 0, // 强制显示所有标签
-						},
-					},
-					yAxis: {},
-					series: [
-						{
-							type: "bar",
-							data: [6, 7, 7, 6, 8, 7, 5, 7, 6, 5],
-						},
-					],
-				},
-				personal_bar: {
-					title: {
-						text: "个性化护理",
-					},
-					tooltip: {},
-					grid: {
-						left: "5%",
-						right: "5%",
-						bottom: "10%",
-						containLabel: true,
-					},
-					xAxis: {
-						data: [
-							"病情改善率",
-							"康复时间",
-							"患者反馈",
-							"生活质量改善",
-							"护理成本",
-							"成本效益比",
-							"复发率",
-							"患者依从性",
-							"长期健康评分",
-							"灵活性评分",
-						],
-						axisLabel: {
-							rotate: 45,
-							interval: 0,
-						},
-					},
-					yAxis: {},
-					series: [
-						{
-							type: "bar",
-							data: [8, 8, 9, 8, 5, 7, 6, 9, 8, 9],
-						},
-					],
-				},
-				preventive_bar: {
-					title: {
-						text: "预防性护理",
-					},
-					tooltip: {},
-					grid: {
-						left: "5%",
-						right: "5%",
-						bottom: "10%",
-						containLabel: true,
-					},
-					xAxis: {
-						data: [
-							"病情改善率",
-							"康复时间",
-							"患者反馈",
-							"生活质量改善",
-							"护理成本",
-							"成本效益比",
-							"复发率",
-							"患者依从性",
-							"长期健康评分",
-							"灵活性评分",
-						],
-						axisLabel: {
-							rotate: 45,
-							interval: 0,
-						},
-					},
-					yAxis: {},
-					series: [
-						{
-							type: "bar",
-							data: [7, 6, 8, 7, 7, 8, 7, 8, 7, 6],
-						},
-					],
-				},
-				show_line: {
-					title: {
-						text: "护理健康趋势",
-					},
-					tooltip: {
-						trigger: "axis",
-						axisPointer: {
-							type: "cross",
-							label: {
-								backgroundColor: "#6a7985",
-							},
-						},
-					},
-					legend: {
-						data: ["病人入院", "护士配置", "药物管理", "病人出院", "健康评估"],
-					},
-					toolbox: {
-						feature: {
-							saveAsImage: {},
-						},
-					},
-					grid: {
-						left: "3%",
-						right: "4%",
-						bottom: "3%",
-						containLabel: true,
-					},
-					xAxis: [
-						{
-							type: "category",
-							boundaryGap: false,
-							data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
-						},
-					],
-					yAxis: [
-						{
-							type: "value",
-						},
-					],
-					series: [
-						{
-							name: "病人入院",
-							type: "line",
-							stack: "总量",
-							areaStyle: {},
-							emphasis: {
-								focus: "series",
-							},
-							data: [120, 132, 101, 134, 90, 230, 210],
-						},
-						{
-							name: "护士配置",
-							type: "line",
-							stack: "总量",
-							areaStyle: {},
-							emphasis: {
-								focus: "series",
-							},
-							data: [220, 182, 191, 234, 290, 330, 310],
-						},
-						{
-							name: "药物管理",
-							type: "line",
-							stack: "总量",
-							areaStyle: {},
-							emphasis: {
-								focus: "series",
-							},
-							data: [150, 232, 201, 154, 190, 330, 410],
-						},
-						{
-							name: "病人出院",
-							type: "line",
-							stack: "总量",
-							areaStyle: {},
-							emphasis: {
-								focus: "series",
-							},
-							data: [320, 332, 301, 334, 390, 330, 320],
-						},
-						{
-							name: "健康评估",
-							type: "line",
-							stack: "总量",
-							label: {
-								show: true,
-								position: "top",
-							},
-							areaStyle: {},
-							emphasis: {
-								focus: "series",
-							},
-							data: [820, 932, 901, 934, 1290, 1330, 1320],
-						},
-					],
-				},
-				show_bar: {
-					title: {
-						text: "护理健康趋势",
-					},
-					tooltip: {
-						trigger: "axis",
-						axisPointer: {
-							type: "shadow",
-						},
-					},
-					legend: {
-						data: ["病人入院", "护士配置", "药物管理", "病人出院", "健康评估"],
-					},
-					toolbox: {
-						feature: {
-							saveAsImage: {},
-						},
-					},
-					grid: {
-						left: "3%",
-						right: "4%",
-						bottom: "3%",
-						containLabel: true,
-					},
-					xAxis: [
-						{
-							type: "category",
-							data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
-						},
-					],
-					yAxis: [
-						{
-							type: "value",
-						},
-					],
-					series: [
-						{
-							name: "病人入院",
-							type: "bar",
-							data: [120, 132, 101, 134, 90, 230, 210],
-						},
-						{
-							name: "护士配置",
-							type: "bar",
-							data: [220, 182, 191, 234, 290, 330, 310],
-						},
-						{
-							name: "药物管理",
-							type: "bar",
-							data: [150, 232, 201, 154, 190, 330, 410],
-						},
-						{
-							name: "病人出院",
-							type: "bar",
-							data: [320, 332, 301, 334, 390, 330, 320],
-						},
-						{
-							name: "健康评估",
-							type: "bar",
-							data: [820, 932, 901, 934, 1290, 1330, 1320],
-						},
-					],
-				},
-				webnursing_word: {
-					series: [
-						{
-							type: "wordCloud",
-							shape: "circle",
-							left: "center",
-							top: "center",
-							width: "100%",
-							height: "100%",
-							gridSize: 2,
-							sizeRange: [10, 32],
-							rotationRange: [-60, 60],
-							textStyle: {
-								fontFamily: "sans-serif",
-								fontWeight: "bold",
-								// Color can be a callback function or a color string
-								color: function () {
-									// Random color
-									return (
-										"rgb(" +
-										[
-											Math.round(Math.random() * 200),
-											Math.round(Math.random() * 250),
-											Math.round(Math.random() * 250),
-										].join(",") +
-										")"
-									);
-								},
-							},
-							data: worddata.info_nursing,
-						},
-					],
-				},
-				iotnursing_word: {
-					series: [
-						{
-							type: "wordCloud",
-							shape: "circle",
-							left: "center",
-							top: "center",
-							width: "100%",
-							height: "100%",
-							gridSize: 2,
-							sizeRange: [10, 32],
-							rotationRange: [-60, 60],
-							textStyle: {
-								fontFamily: "sans-serif",
-								fontWeight: "bold",
-								// Color can be a callback function or a color string
-								color: function () {
-									// Random color
-									return (
-										"rgb(" +
-										[
-											Math.round(Math.random() * 200),
-											Math.round(Math.random() * 250),
-											Math.round(Math.random() * 250),
-										].join(",") +
-										")"
-									);
-								},
-							},
-							data: worddata.iot_nursing,
-						},
-					],
-				},
-				infonursing_word: {
-					series: [
-						{
-							type: "wordCloud",
-							shape: "circle",
-							left: "center",
-							top: "center",
-							width: "100%",
-							height: "100%",
-							gridSize: 2,
-							sizeRange: [10, 32],
-							rotationRange: [-60, 60],
-							textStyle: {
-								fontFamily: "sans-serif",
-								fontWeight: "bold",
-								// Color can be a callback function or a color string
-								color: function () {
-									// Random color
-									return (
-										"rgb(" +
-										[
-											Math.round(Math.random() * 200),
-											Math.round(Math.random() * 250),
-											Math.round(Math.random() * 250),
-										].join(",") +
-										")"
-									);
-								},
-							},
-							data: worddata.info_nursing,
-						},
-					],
-				},
-				sanky_finance: {
-					title: {
-						text: "资源分配与成本分析桑基图",
-					},
-					tooltip: {
-						trigger: "item",
-						triggerOn: "mousemove",
-					},
-					series: [
-						{
-							type: "sankey",
-							layout: "none",
-							emphasis: {
-								focus: "adjacency",
-							},
-							data: [
-								{ name: "总预算" },
-								{ name: "人力资源" },
-								{ name: "设备采购" },
-								{ name: "药品费用" },
-								{ name: "科室A" },
-								{ name: "科室B" },
-								{ name: "科室C" },
-							],
-							links: [
-								{ source: "总预算", target: "人力资源", value: 40 },
-								{ source: "总预算", target: "设备采购", value: 30 },
-								{ source: "总预算", target: "药品费用", value: 30 },
-								{ source: "人力资源", target: "科室A", value: 15 },
-								{ source: "人力资源", target: "科室B", value: 15 },
-								{ source: "人力资源", target: "科室C", value: 10 },
-								{ source: "设备采购", target: "科室A", value: 10 },
-								{ source: "设备采购", target: "科室B", value: 10 },
-								{ source: "设备采购", target: "科室C", value: 10 },
-								{ source: "药品费用", target: "科室A", value: 10 },
-								{ source: "药品费用", target: "科室B", value: 10 },
-								{ source: "药品费用", target: "科室C", value: 10 },
-							],
-						},
-					],
-				},
-				sanky_treatment: {
-					title: {
-						text: "复杂治疗路径桑基图",
-					},
-					tooltip: {
-						trigger: "item",
-						triggerOn: "mousemove",
-					},
-					series: [
-						{
-							type: "sankey",
-							layout: "none",
-							emphasis: {
-								focus: "adjacency",
-							},
-							data: [
-								{ name: "初步诊断" },
-								{ name: "影像检查" },
-								{ name: "化验检查" },
-								{ name: "观察等待" },
-								{ name: "药物治疗" },
-								{ name: "手术治疗" },
-								{ name: "康复治疗" },
-								{ name: "专科转诊" },
-								{ name: "治愈" },
-								{ name: "症状缓解" },
-								{ name: "持续观察" },
-								{ name: "再次诊断" },
-							],
-							links: [
-								{ source: "初步诊断", target: "影像检查", value: 30 },
-								{ source: "初步诊断", target: "化验检查", value: 40 },
-								{ source: "初步诊断", target: "观察等待", value: 30 },
-								{ source: "影像检查", target: "药物治疗", value: 20 },
-								{ source: "化验检查", target: "药物治疗", value: 30 },
-								{ source: "化验检查", target: "手术治疗", value: 10 },
-								{ source: "观察等待", target: "药物治疗", value: 10 },
-								{ source: "药物治疗", target: "康复治疗", value: 20 },
-								{ source: "手术治疗", target: "康复治疗", value: 10 },
-								{ source: "康复治疗", target: "治愈", value: 15 },
-								{ source: "康复治疗", target: "症状缓解", value: 10 },
-								{ source: "药物治疗", target: "症状缓解", value: 20 },
-								{ source: "专科转诊", target: "再次诊断", value: 5 },
-								{ source: "影像检查", target: "专科转诊", value: 10 },
-								{ source: "持续观察", target: "再次诊断", value: 10 },
-							],
-						},
-					],
-				},
-			};
-		</script>
-	</body>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>班级博客</title>
+    <style>
+        /* 整体页面布局样式 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F0F8FF;
+            color: #2C3E50;
+            line-height: 1.6;
+        }
+
+        /* 容器样式 */
+        #container {
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+        }
+
+        /* 页面头部 */
+        header {
+            background-color: #5DADE2;
+            color: #fff;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #class-logo {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+        }
+
+        #class-logo img {
+            width: 80px;
+            /* 宽度为父容器的100% */
+            height: 80px;
+            /* 高度自动，保持比例 */
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        /* 导航栏样式 */
+        nav {
+            background-color: #85C1E9;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #2C3E50;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 1.1em;
+        }
+
+        nav ul li a:hover {
+            background-color: #AED6F1;
+        }
+
+        /* 主要内容区域 */
+        main {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            /* 调整列数为最多三列 */
+            gap: 30px;
+            /* 加大间距 */
+        }
+
+        /* 班级学风说明文本区域 */
+        .class-info {
+            grid-column: 1 / -1;
+            background-color: #D6EAF8; /* 使用更醒目的背景色 */
+            padding: 10px; /* 减少内边距 */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15); /* 提高阴影的存在感 */
+            border-radius: 8px;
+            border: 2px solid #3498db; /* 使用更明显的边框 */
+            margin: 5px; /* 减少外边距 */
+        }
+
+        .class-info h2 {
+            margin-top: 0;
+            color: #21618C;
+            font-size: 1.8em; /* 增大标题字体 */
+            font-weight: bold; /* 加粗字体 */
+            margin-bottom: 7px;
+        }
+
+        .class-info p {
+            font-size: 1.2em; /* 增大内容字体 */
+            font-weight: bold; /* 加粗内容字体 */
+            margin-top: 0px; /* 增加外边距 */
+            margin:5px;
+        }
+
+
+        /* 瀑布流项目样式 */
+        .content-item {
+            background-color: #EBF5FB;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            border: 1px solid #D6EAF8;
+            font-size: 1.1em;
+        }
+
+        .content-item h2 {
+            margin-top: 0;
+            color: #21618C;
+            font-size: 1.2em;
+        }
+
+        /* 照片展示区域 */
+        .photo-item {
+            border: 1px solid #D6EAF8;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .photo-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* 页脚 */
+        footer {
+            background-color: #5DADE2;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 20px;
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <header>
+            <div id="class-logo">
+                <img src="classlogo.jpg">
+            </div>
+            <h1>护理233班 班级博客</h1>
+
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#">首页</a></li>
+                <li><a href="#">班级动态</a></li>
+                <li><a href="#">同学风采</a></li>
+                <li><a href="#">班级相册</a></li>
+                <li><a href="#">联系我们</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <!-- 固定的班级学风说明文本 -->
+            <div class="class-info">
+                <h2>班级学风</h2>
+                <p>护理233班秉持“关爱、专业、创新、奉献”的学风理念，致力于通过扎实的专业学习与丰富的实践活动，培养具有高度责任感与使命感的优秀护理人才。</p>
+            </div>
+
+            <!-- 文化建设的文本容器 -->
+            <div class="content-item">
+                <h2>班级文化建设</h2>
+                <p>我们的班级文化强调团结、合作和尊重。通过组织各种文化活动和团队项目，我们希望能够增强班级凝聚力并丰富学生的校园生活。</p>
+            </div>
+
+            
+
+            <!-- 活动公告的文本容器 -->
+            <div class="content-item">
+                <h2>活动公告</h2>
+                <p>近期将开办班会，欢迎各位同学积极参与,具体时间请关注钉钉群内通知。</p>
+            </div>
+
+            <!-- 照片展示区域 -->
+            <div class="photo-item">
+                <img src="pho1.jpg" alt="班级照片示例1">
+            </div>
+
+            <div class="photo-item">
+                <img src="pho4.jpg" alt="班级照片示例3">
+            </div>
+
+            <!-- 更多文化建设的文本容器 -->
+            <div class="content-item">
+                <h2>班级学习小组</h2>
+                <p>班级通过制定学习计划和建立学习小组等方式，帮助学生养成良好的学习习惯，提高了自主学习能力。
+                    定期的自我评估和反馈机制，使学生能够及时调整学习策略，提高学习效率。
+                    良好的学习习惯对学生的长远发展至关重要，班级在这方面的成效和经验值得分享和推广。</p>
+            </div>
+
+            <div class="photo-item">
+                <img src="pho2.jpg" alt="班级照片示例2">
+            </div>
+
+            <div class="photo-item">
+                <img src="pho3.jpg" alt="班级照片示例4">
+            </div>
+            
+
+            <div class="content-item">
+                <h2>学术研讨会</h2>
+                <p>班级定期举办学术讲座和研讨会，邀请行业专家和学者分享最新研究成果，激发学生的学习兴趣和学术热情。
+                    通过小组讨论和课题研究等形式，班级促进了学生之间的学术交流和合作，提高了学生的学术能力和创新思维。
+                    学术活动的多样性和创新性，如专题讲座和实践机会的增加，为学生提供了更广阔的学术视野。</p>
+            </div>
+
+            
+        </main>
+
+        <footer>
+            <p>&copy; 2024 班级博客. 版权所有.</p>
+        </footer>
+    </div>
+
+
+</body>
+
 </html>
